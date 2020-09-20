@@ -1,0 +1,3 @@
+duckduckgo: https://duckduckgo.com/assets/icons/meta/DDG-icon_256x256.png
+google: https://img-authors.flaticon.com/google.jpg
+bing: https://image.flaticon.com/icons/png/512/152/152853.png

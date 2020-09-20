@@ -1,0 +1,38 @@
+{
+    "manifest_version" : 2,
+    "author" : "josemariagon",
+    "name" : "AugmentedWebExtension",
+    "version" : "1.0",
+
+    "content_scripts": [
+        {
+          "matches": ["*://*.google.com/search*", "*://*.duckduckgo.com/?q=*", "*://*.bing.com/search*"],
+          "js": ["node_modules/jquery/dist/jquery.min.js", "content_scripts/Result.js", "content_scripts/SearchEngine.js", "content_scripts/GoogleEngine.js","content_scripts/DuckDuckGoEngine.js", "content_scripts/BingEngine.js"]
+        }
+    ],
+
+    "background": {
+      "scripts": [
+        "background_scripts/main.js"
+      ]
+    },
+
+    "browser_action": {
+      "default_icon": {
+        "64": "resources/webaugmented64.png"
+      },
+      "default_title": "WebAugmentedOO2"
+    },
+
+    "web_accessible_resources": [
+      "resources/googleicon.jpg",
+      "resources/bingicon.png",
+      "resources/duckduckgoicon.png"
+    ],
+
+    "permissions": [
+      "<all_urls>",
+        "tabs",
+        "storage"
+    ]
+}

@@ -1,0 +1,16 @@
+{
+          "matches": ["<all_urls>"],
+          "js": ["content_scripts/ContentScript.js"]
+        }
+        // {
+        //   "matches": ["*://*.google.com/search*"],
+        //   "js": ["content_scripts/GoogleScript.js"]
+        // },
+        // {
+        //   "matches": ["*://*.bing.com/search*","*://*.duckduckgo.com/?q=*"],
+        //   "js": ["content_scripts/BingScript.js"]
+        // },
+        // {
+        //   "matches": ["*://*.duckduckgo.com/?q=*"],
+        //   "js": ["content_scripts/DuckDuckGoScript.js"]
+        // }
