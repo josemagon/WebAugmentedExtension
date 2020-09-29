@@ -3,7 +3,7 @@
 class DuckDuckGoEngine extends SearchEngine{
 
     constructor(){
-        super("https://duckduckgo.com/html/?q=", "duckduckgo.com", ".result");
+        super("https://html.duckduckgo.com/html/?q=", "duckduckgo.com", ".result");
         console.log("DuckDuckGo instanciado.");
     }
 
@@ -12,24 +12,12 @@ class DuckDuckGoEngine extends SearchEngine{
         this.icon = browser.extension.getURL("resources/duckduckgoicon.png");
     }
 
-    // createIconsDiv(){
-    //     $(".result").after("<div style=\"display:inline;\" class=\"augmented-icons-results\" data-title=\"textodelanoticia\"></div>");
-    // }
+    createResultFrom(anHTMLElement){
+        var text = $(anHTMLElement).find("h2 > a")[0].textContent;
+        var elementAnchor = $(anHTMLElement).find("a")[0];
+        var target = $(elementAnchor).attr("href");
 
-    createIconsDiv(){
-        var duckduckgo_results = $(this.resultSelector);
-        for (let index = 0; index < duckduckgo_results.length; index++) {
-            const element = duckduckgo_results[index];
-
-            var text = $(element).find("h2 > a")[0].textContent;
-            var elementAnchor = $(element).find("a")[0];
-            var target = $(elementAnchor).attr("href");
-
-            var new_result = new Result(target, this, text);
-            this.results.push(new_result);
-
-            $(element).after(this.createButton(new_result));
-        }
+        return new Result(target, this, text);
     }
 
     createButton(aResult){
@@ -39,3 +27,9 @@ class DuckDuckGoEngine extends SearchEngine{
 }
 
 var duckduckgoengine = new DuckDuckGoEngine();
+
+browser.runtime.onMessage.addListener((request, sender) => {
+
+    console.log("[content-side] calling the message: " + request.message);
+    duckduckgoengine[request.message]();
+});

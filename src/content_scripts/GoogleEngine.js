@@ -8,24 +8,15 @@ class GoogleEngine extends SearchEngine{
 
 
     setIcon(){
-        // this.icon = "https://img-authors.flaticon.com/google.jpg";
         this.icon = browser.extension.getURL("resources/googleicon.jpg");
     }
 
-    createIconsDiv(){
-        var google_results = $(this.resultSelector);
-        for (let index = 0; index < google_results.length; index++) {
-            const element = google_results[index];
+    createResultFrom(anHTMLElement){
+        var elementAnchor = $(anHTMLElement).find("a")[0];
+        var text = $(anHTMLElement).find("h3")[0].textContent;
+        var target = $(elementAnchor).attr("href");
 
-            var elementAnchor = $(element).find("a")[0];
-            var text = $(element).find("h3")[0].textContent;
-            var target = $(elementAnchor).attr("href");
-
-            var new_result = new Result(target, this, text);
-            this.results.push(new_result);
-
-            $(element).append(this.createButton(new_result));
-        }
+        return new Result(target, this, text);
     }
 
     createButton(aResult){
@@ -35,3 +26,9 @@ class GoogleEngine extends SearchEngine{
 }
 
 var googleengine = new GoogleEngine();
+
+browser.runtime.onMessage.addListener((request, sender) => {
+
+    console.log("[content-side] calling the message: " + request.message);
+    googleengine[request.message]();
+});

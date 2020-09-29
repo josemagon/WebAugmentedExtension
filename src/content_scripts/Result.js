@@ -9,10 +9,6 @@ class Result{
         this.text = text;
     }
 
-    render(){
-        // return "<a href=\"" + this.targetURL + "\"> \"" + this.text + "\" </a>";
-    }
-
     getTargetURL(){
         return this.targetURL;
     }

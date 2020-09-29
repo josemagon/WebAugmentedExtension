@@ -5,6 +5,13 @@ class BackgroundExtension{
         console.log("Background created.");
     }
 
+    getCurrentTab(callback) {
+		return browser.tabs.query({
+			active: true,
+			currentWindow: true
+		});
+	}
+
     getResultsFor(args){
         console.log("Attempting to get news from: " + args.searchURL + args.text);
         return new Promise((resolve, reject) => {
@@ -23,8 +30,20 @@ class BackgroundExtension{
 		});
     }
 
+    iconsDivReady(){
+        this.getCurrentTab().then((tabs) => {
+            browser.tabs.sendMessage(tabs[0].id, {
+                "message": "showUI"
+            });
+        });
+    }
+
     showResultsList(){
-        console.log("Showing results list.");
+        this.getCurrentTab().then((tabs) => {
+            browser.tabs.sendMessage(tabs[0].id, {
+                "message": "showMashupDiv"
+            });
+        });
     }
 }
 
