@@ -9,10 +9,6 @@ class BingEngine extends SearchEngine{
     setIcon(){
         this.icon = browser.extension.getURL("resources/bingicon.png");
     }
-
-    createButton(aResult){
-        return $("<div class=\"augmented-icons-results\" data-title=\""+aResult.getText()+"\" data-targeturl=\""+aResult.getTargetURL()+"\"></div>");
-    }
     
     createResultFrom(anHTMLElement){
         var text = $(anHTMLElement).find("a")[0].textContent;

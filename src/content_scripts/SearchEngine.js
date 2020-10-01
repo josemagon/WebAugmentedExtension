@@ -20,7 +20,6 @@ class SearchEngine{
 
     createIconsDiv(){
         var results = $(this.resultSelector);
-        console.log("["+this.hostName+"] There are " + results.length + " results");
         for (let index = 0; index < results.length; index++) {
             const element = results[index];
 
@@ -28,12 +27,11 @@ class SearchEngine{
 
             $(element).append(this.createButton(new_result));
         }
-        this.iconsDivReady();
-        
+        this.iconsDivReady();   
     }
 
     createButton(aResult){
-        //abstract
+        return $("<div class=\"augmented-icons-results\" data-title=\""+aResult.getText()+"\" data-targeturl=\""+aResult.getTargetURL()+"\"></div>");
     }
 
     iconsDivReady(){
@@ -51,9 +49,9 @@ class SearchEngine{
         var resultsPosition = $("#mashupdiv > div.mashup-pos-" + aPosition);
         if (resultsPosition.length == 0){
             $("#mashupdiv").append("<div class=\"mashup-pos-"+aPosition+"\"><h2>"+aPosition+"</h2></div>");
-            $("#mashupdiv > div.mashup-pos-" + aPosition).append("<p> " + this.hostName + ": " + aResult.getText() + " </p>");
+            $("#mashupdiv > div.mashup-pos-" + aPosition).append("<p> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " </p>");
         }else{
-            $(resultsPosition[0]).append("<p> " + this.hostName + ": " + aResult.getText() + " </p>");
+            $(resultsPosition[0]).append("<p> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " </p>");
         }
     }
 
@@ -74,7 +72,7 @@ class SearchEngine{
             }
 
             if (results.length == 0){ //no results for this query
-                $("#mashupdiv").prepend("<p style=\"color:red;\">" + this.getQueryString() + " not found at " + this.hostName + "</p>");
+                $("#mashupdiv").prepend("<p style=\"color:red;\">" + this.getQueryString() + " not found at " + this.hostName + " OR too many requests. May be try again later?</p>");
             }
         });
     }
@@ -139,6 +137,7 @@ class SearchEngine{
             const result = aCollection[index];
             // var target = targeturl.split("?")[0].toLowerCase();
             var resultTarget = $($(result).find("a")[0]).attr("href"); //convert it to a html element
+            console.log("Comparando " + targeturl.toLowerCase() + " con " + resultTarget.toLowerCase());
             if (targeturl.toLowerCase().includes(resultTarget.toLowerCase())){
                 num = index+1;
             }
