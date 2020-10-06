@@ -3,7 +3,7 @@
 
 Teniendo en cuenta que se trata de diferentes buscadores, se decidió implementar el patron de diseño Template Method, basándonos en la existencia de varios tipos de buscadores web.
 La clase padre SearchEngine compila los métodos y atributos comunes a todos los diferentes buscadores que son representados como clases hijas.
-
+<img src="https://github.com/josemagon/WebAugmentedExtension/blob/master/docs/capture.png" alt="" height="" width="">
 ## Algunos métodos implementados en la case SearchEngine
 ## (privado) <<abstracto>> createResultFrom(anHTMLElement:HTMLElement):Result
 	crea un objeto Result a partir de un resultado obtenido del DOM.
