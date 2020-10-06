@@ -1,14 +1,8 @@
-
-class BingEngine extends SearchEngine{
-
+class BingEngineTest extends SearchEngineTest{
     constructor(){
         super("https://www.bing.com/search?q=", "www.bing.com", ".b_algo");
     }
 
-    setIcon(){
-        this.icon = browser.extension.getURL("resources/bingicon.png");
-    }
-    
     createResultFrom(anHTMLElement){
         var text = $(anHTMLElement).find("a")[0].textContent;
         var elementAnchor = $(anHTMLElement).find("a")[0];
@@ -16,13 +10,7 @@ class BingEngine extends SearchEngine{
 
         return new Result(target, this, text);
     }
-
 }
 
-var bingengine = new BingEngine();
-
-browser.runtime.onMessage.addListener((request, sender) => {
-
-    console.log("[content-side] calling the message: " + request.message);
-    bingengine[request.message]();
-});
+var bingenginetest = new BingEngineTest();
+bingenginetest.testRetrieveNews();

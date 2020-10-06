@@ -3,7 +3,6 @@ class GoogleEngine extends SearchEngine{
 
     constructor(){
         super("https://google.com/search?q=", "www.google.com", ".rc");
-        console.log("GoogleEngine instanciado.");
     }
 
 

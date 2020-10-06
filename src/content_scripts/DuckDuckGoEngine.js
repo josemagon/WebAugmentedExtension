@@ -4,7 +4,6 @@ class DuckDuckGoEngine extends SearchEngine{
 
     constructor(){
         super("https://html.duckduckgo.com/html/?q=", "duckduckgo.com", ".result");
-        console.log("DuckDuckGo instanciado.");
     }
 
 
@@ -30,7 +29,6 @@ class DuckDuckGoEngine extends SearchEngine{
     createIconsDiv(){
         setTimeout(() => { //duckduckgo needs a little delay, body takes time to fully load
             var results = $(this.resultSelector);
-            console.log("["+this.hostName+"] There are " + results.length + " results");
             for (let index = 0; index < results.length; index++) {
                 const element = results[index];
 

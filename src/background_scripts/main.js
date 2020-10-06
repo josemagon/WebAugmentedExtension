@@ -59,20 +59,5 @@ function handleMessage(request, sender, sendResponse) {
 browser.browserAction.onClicked.addListener(() => {
         background.showResultsList();
 });
-
-// var startBackground = function() {
-// 	var background = new BackgroundExtension();
-
-// 	browser.browserAction.onClicked.addListener(() => {
-//           background.showResultsList();
-// 	});
-
-// 	browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-// 		console.log("[background-side] calling the message: " + request.call);
-// 		if(background[request.call]){
-// 			sendResponse({reponse: background[request.call](request.args)});
-// 		}
-// 	});
-// }
   
 browser.runtime.onMessage.addListener(handleMessage);

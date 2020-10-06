@@ -31,3 +31,6 @@ La clase padre SearchEngine compila los métodos y atributos comunes a todos los
 El método addToMashUp es usado por el objeto correspondiente al buscador actual, y va a agregar al mashup los resultados que están ya se encuentran cargados.
 En contraste, addOwnMashup es un método que utilizan los buscadores alternativos, usando el string que devuelve getQueryString para obtener sus propios resultados y agregarlos al mashup en la posición correspondiente. 
 
+# Habilitando los tests
+Se pueden incluir los archivos javascript en el directorio 'tests' al manifest, correspondientes a los tests de cada clase, recordando que el archivo 'SearchEngine.js' correspondiente a la clase SearchEngine debe ser referenciado primero.
+Los resultados de los tests son imprimidos en la consola del explorador.

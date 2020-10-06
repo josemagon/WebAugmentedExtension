@@ -7,7 +7,7 @@
     "content_scripts": [
         {
           "matches": ["*://*.google.com/search*", "*://*.duckduckgo.com/?q*", "*://*.bing.com/search*"],
-          "js": ["node_modules/webextension-polyfill/dist/browser-polyfill.min.js","node_modules/jquery/dist/jquery.min.js", "content_scripts/Result.js", "content_scripts/SearchEngine.js", "content_scripts/GoogleEngine.js","content_scripts/DuckDuckGoEngine.js", "content_scripts/BingEngine.js"]
+          "js": ["node_modules/webextension-polyfill/dist/browser-polyfill.min.js","node_modules/jquery/dist/jquery.min.js", "content_scripts/Result.js", "content_scripts/SearchEngine.js", "content_scripts/DuckDuckGoEngine.js", "content_scripts/GoogleEngine.js", "content_scripts/BingEngine.js"]
         }
     ],
 

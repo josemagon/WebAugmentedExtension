@@ -137,7 +137,6 @@ class SearchEngine{
             const result = aCollection[index];
             // var target = targeturl.split("?")[0].toLowerCase();
             var resultTarget = $($(result).find("a")[0]).attr("href"); //convert it to a html element
-            console.log("Comparando " + targeturl.toLowerCase() + " con " + resultTarget.toLowerCase());
             if (targeturl.toLowerCase().includes(resultTarget.toLowerCase())){
                 num = index+1;
             }
