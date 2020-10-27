@@ -1,6 +1,9 @@
 # WebAugmentedExtension
 ## TPFinal OO2
-
+<video width="" height="" controls>
+  <source src="https://github.com/josemagon/WebAugmentedExtension/blob/master/docs/promo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 Teniendo en cuenta que se trata de diferentes buscadores, se decidió implementar el patron de diseño Template Method, basándonos en la existencia de varios tipos de buscadores web.
 La clase padre SearchEngine compila los métodos y atributos comunes a todos los diferentes buscadores que son representados como clases hijas.
 <img src="https://github.com/josemagon/WebAugmentedExtension/blob/master/docs/capture.png" alt="" height="" width="">
