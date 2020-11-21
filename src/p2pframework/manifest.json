@@ -1,0 +1,49 @@
+{
+  "manifest_version": 2,
+  "name": "storep2p",
+  "version": "0.1.1",
+  "author": "ragonzalez",
+  "description": "Same as LinkTree Store p2p",
+  "icons": {
+    "32": "icons/store-32.png",
+    "48": "icons/store-48.png"
+  },
+  "permissions": [
+    "storage",
+    "<all_urls>",
+    "webRequest",
+    "webRequestBlocking",
+    "menus",
+    "activeTab",
+    "notifications",
+    "tabs",
+    "find",
+    "clipboardWrite",
+    "contextMenus",
+    "sessions",
+    "management"
+  ],
+  "browser_action": {
+    "default_icon": {
+     "32": "icons/store-32.png",
+     "48": "icons/store-48.png"
+    },
+    "default_title": "Store P2P",
+    "default_popup": "template/code.html",
+    "browser_style": true
+  },
+  "background": {
+    "scripts": ["conector.js","storep2p.js"]
+  },
+  "web_accessible_resources": [
+    "lib/bootstrap.min.css",
+    "lib/jquery-3.4.1.slim.min.js",
+    "lib/popper.min.js",
+    "lib/bootstrap.min.js"
+  ],
+    "applications": {
+      "gecko": {
+        "id": "storep2p@oncosmos.com"
+      }
+    }
+}

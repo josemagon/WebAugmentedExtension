@@ -1,0 +1,70 @@
+<html> 
+   <head>
+      <meta charset = "utf-8">
+      <title> DB P2P </title>
+      <style>
+
+         body {
+            width:500px;
+            height:350px;
+         }
+
+     </style>
+    
+     
+
+   </head>
+
+   <body>
+
+      <div class="container-fluid"> 
+
+      <form>
+         <div class="form-group">
+              
+          <label for="sel1" id="peerlocal"></label>
+         
+         </div>
+          
+         <div class="form-group">
+          <div id="seleccion"></div>
+        
+          <select id="listusers" class="form-control">
+
+          </select>
+         </div>
+
+         <div class="form-group">
+
+         
+          <select id="listitems" class="form-control">
+
+          </select>
+
+         </div>
+
+         <div class="form-group">
+
+          <label for="miscenaleas">Miscelaneas</label>
+          
+          <textarea id="code" rows="4" class="form-control"></textarea>
+
+         </div>
+          
+          <button type="button" id="savedata" class="btn btn-primary btn-block">Save data</button>
+          <button type="button" id="saveurl" class="btn btn-primary btn-block">Save active url</button>
+          <button type="button" id="viewdata" class="btn btn-primary btn-block">View data</button>
+          <button type="button" id="syncdata" class="btn btn-primary btn-block">Sync data</button>
+     
+        </div>
+
+      </form>
+      
+      </div>
+
+      <script src="../loadLibrary.js"></script>
+      
+      <script src="../util/tool.js"></script>
+
+   </body>
+</html>

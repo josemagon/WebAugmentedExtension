@@ -30,6 +30,39 @@ class SearchEngine{
         this.iconsDivReady();   
     }
 
+<<<<<<< HEAD
+    askPeers(){
+        var augmentedDivs = $(".augmented-icons-results");
+        for (let index = 0; index < augmentedDivs.length; index++) {
+            const element = augmentedDivs[index];
+            var boton = $("<span style=\"width: 50px; height: 50px; border: 1px solid black; border-radius: 100%;\">X de X</span>");
+            $(element).append(boton);
+            
+            var aDiv = boton[0].parentElement;
+            var texto = $(aDiv).attr("data-title");
+            var target = $(aDiv).attr("data-targeturl");
+            browser.runtime.sendMessage({
+                "message":"askPeers",
+                "args":{
+                    "resultSelector": this.resultSelector,
+                    "searchURL": this.searchURL,
+                    "text" : texto
+                }
+            });
+        }
+    }
+
+    addPeerResult(msg){
+        var resultnumber = this.getResultNumber(msg.results, target);
+        var cantidad_encontrados = 0;
+        if(resultnumber > 0){ //sí lo obtuvo este peer
+            cantidad_encontrados++;
+        }
+        $("span#p2p-result-"+msg.i).text(cantidad_encontrados + " de X");
+    }
+
+=======
+>>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
     createButton(aResult){
         return $("<div class=\"augmented-icons-results\" data-title=\""+aResult.getText()+"\" data-targeturl=\""+aResult.getTargetURL()+"\"></div>");
     }
@@ -92,7 +125,11 @@ class SearchEngine{
 
     createMashupDiv(){
         //the modal to show the mashup results when the action button is clicked.
+<<<<<<< HEAD
+        $("body").prepend("<div id=\"mashupdiv\" style=\"overflow-y: scroll; display:none; background-color:white; height: 100%; width: 30%; position:fixed; top:0px; right:0px; z-index: 9000000000000000000; border: 1px solid gray; padding: 10px; border-radius: 6px;\"><div style=\"text-align:center;\"><img src=\"" + browser.extension.getURL("resources/webaugmented64.png") + "\" alt=\"\" height=\"50\" width=\"50\"></div><h3 style=\"text-align:center;\">Mashup <strong>" + this.getQueryString() + "</strong></h3></div>");
+=======
         $("body").prepend("<div id=\"mashupdiv\" style=\"overflow-y: scroll; display:none; background-color:white; position:sticky; top:60px; right:0px; z-index:1000; width:25%; margin-left:70%; border: 1px solid gray; padding: 10px; border-radius: 6px;\"><div style=\"text-align:center;\"><img src=\"" + browser.extension.getURL("resources/webaugmented64.png") + "\" alt=\"\" height=\"50\" width=\"50\"></div><h3 style=\"text-align:center;\">Mashup <strong>" + this.getQueryString() + "</strong></h3></div>");
+>>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
     }
 
     showMashupDiv(){
@@ -161,6 +198,11 @@ class SearchEngine{
                 $(element).append(boton);
                 this.retrieveNews(boton[0].parentElement, boton);
             }
+<<<<<<< HEAD
+        }else{
+            this.askPeers();
+=======
+>>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
         }
     }
 
