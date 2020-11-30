@@ -1,6 +1,6 @@
 
 
-var objBack=browser.extension.getBackgroundPage();
+var objBack=chrome.extension.getBackgroundPage();
 
 objBack.loadLibrary();
 

@@ -13,11 +13,7 @@
 
     "background": {
       "scripts": [
-<<<<<<< HEAD
-        "node_modules/webextension-polyfill/dist/browser-polyfill.min.js","p2pframework/conector.js",
-=======
-        "node_modules/webextension-polyfill/dist/browser-polyfill.min.js",
->>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
+        "node_modules/webextension-polyfill/dist/browser-polyfill.min.js","conector.js",
         "background_scripts/main.js"
       ]
     },
@@ -37,7 +33,6 @@
     ],
 
     "permissions": [
-<<<<<<< HEAD
       "storage",
       "<all_urls>",
       "webRequest",
@@ -49,10 +44,5 @@
       "contextMenus",
       "sessions",
       "management"
-=======
-      "<all_urls>",
-        "tabs",
-        "storage"
->>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
     ]
 }

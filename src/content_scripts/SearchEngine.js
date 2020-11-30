@@ -6,16 +6,19 @@ class SearchEngine{
     hostName;
     resultSelector; //Google = .rc, DuckDuckGo = .result, Bing = .b_algo
     icon;
+    peersAvailable; // para saber si ya podemos usar el framework o no
 
     constructor(aURL, aHostname, aSelector){
         this.searchURL = aURL;
         this.hostName = aHostname;
         this.resultSelector = aSelector;
+        this.peersAvailable = false;
 
         if (this.isMyEngine()){
             this.createMashup();
             this.createIconsDiv();
         }
+        
     }
 
     createIconsDiv(){
@@ -25,45 +28,66 @@ class SearchEngine{
 
             var new_result = this.createResultFrom(element);
 
-            $(element).append(this.createButton(new_result));
+            $(element).append(this.createAugmentedIconsDiv(new_result));
         }
         this.iconsDivReady();   
     }
 
-<<<<<<< HEAD
     askPeers(){
-        var augmentedDivs = $(".augmented-icons-results");
-        for (let index = 0; index < augmentedDivs.length; index++) {
-            const element = augmentedDivs[index];
-            var boton = $("<span style=\"width: 50px; height: 50px; border: 1px solid black; border-radius: 100%;\">X de X</span>");
-            $(element).append(boton);
-            
-            var aDiv = boton[0].parentElement;
-            var texto = $(aDiv).attr("data-title");
-            var target = $(aDiv).attr("data-targeturl");
+        if (this.peersAvailable){
+            var augmentedDivs = $(".augmented-icons-results");
+            for (let index = 0; index < augmentedDivs.length; index++) {
+                const element = augmentedDivs[index];
+                var boton = $("<span id=\"p2p-result-"+index+"\" style=\"width: 50px; height: 50px; border: 1px solid black; border-radius: 50px; line-height: 50px; padding:0px; display:inline-block; background-color: white;\"><span class=\"encontrados\">0</span> de <span class=\"peerslength\">0</span></span>");
+                $(element).append(boton);
+                
+                var aDiv = boton[0].parentElement;
+                var texto = $(aDiv).attr("data-title");
+                var target = $(aDiv).attr("data-targeturl");
+                browser.runtime.sendMessage({
+                    "message":"askPeers",
+                    "args":{
+                        "resultSelector": this.resultSelector,
+                        "searchURL": this.searchURL,
+                        "text" : texto,
+                        "i": index,
+                        "target": target
+                    }
+                });
+            }
+        }else{
+            console.log("cant ask peers yet");
             browser.runtime.sendMessage({
-                "message":"askPeers",
-                "args":{
-                    "resultSelector": this.resultSelector,
-                    "searchURL": this.searchURL,
-                    "text" : texto
-                }
+                "message":"loadPeers",
+                "args":{}
             });
+            setTimeout(() => {
+                this.askPeers();
+            }, 5000);
         }
     }
 
-    addPeerResult(msg){
-        var resultnumber = this.getResultNumber(msg.results, target);
-        var cantidad_encontrados = 0;
-        if(resultnumber > 0){ //sí lo obtuvo este peer
-            cantidad_encontrados++;
-        }
-        $("span#p2p-result-"+msg.i).text(cantidad_encontrados + " de X");
+    enablePeers(args){
+        console.log("attempting to enable peers");
+        this.peersAvailable = true;
     }
 
-=======
->>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
-    createButton(aResult){
+    addPeerResult(args){
+        if (this.isMyEngine()){
+            console.log(args);
+            var resultnumber = this.getResultNumber(args.msg.results, args.target);
+            var burbuja = $("#p2p-result-" + args.msg.i);
+            $(burbuja).find(".peerslength").text(args.mypeerslength);
+            if(resultnumber > 0){ //sí lo obtuvo este peer
+                var actual = parseInt($(burbuja).find(".encontrados").text());
+                actual++;
+                $(burbuja).find(".encontrados").text(actual);
+            }
+            
+        }
+    }
+
+    createAugmentedIconsDiv(aResult){
         return $("<div class=\"augmented-icons-results\" data-title=\""+aResult.getText()+"\" data-targeturl=\""+aResult.getTargetURL()+"\"></div>");
     }
 
@@ -125,14 +149,10 @@ class SearchEngine{
 
     createMashupDiv(){
         //the modal to show the mashup results when the action button is clicked.
-<<<<<<< HEAD
         $("body").prepend("<div id=\"mashupdiv\" style=\"overflow-y: scroll; display:none; background-color:white; height: 100%; width: 30%; position:fixed; top:0px; right:0px; z-index: 9000000000000000000; border: 1px solid gray; padding: 10px; border-radius: 6px;\"><div style=\"text-align:center;\"><img src=\"" + browser.extension.getURL("resources/webaugmented64.png") + "\" alt=\"\" height=\"50\" width=\"50\"></div><h3 style=\"text-align:center;\">Mashup <strong>" + this.getQueryString() + "</strong></h3></div>");
-=======
-        $("body").prepend("<div id=\"mashupdiv\" style=\"overflow-y: scroll; display:none; background-color:white; position:sticky; top:60px; right:0px; z-index:1000; width:25%; margin-left:70%; border: 1px solid gray; padding: 10px; border-radius: 6px;\"><div style=\"text-align:center;\"><img src=\"" + browser.extension.getURL("resources/webaugmented64.png") + "\" alt=\"\" height=\"50\" width=\"50\"></div><h3 style=\"text-align:center;\">Mashup <strong>" + this.getQueryString() + "</strong></h3></div>");
->>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
     }
 
-    showMashupDiv(){
+    showMashupDiv(args){
         if(this.isMyEngine())
             $("#mashupdiv").fadeToggle(500);
     }
@@ -174,6 +194,7 @@ class SearchEngine{
             const result = aCollection[index];
             // var target = targeturl.split("?")[0].toLowerCase();
             var resultTarget = $($(result).find("a")[0]).attr("href"); //convert it to a html element
+            console.log("COMPARANDO: " + targeturl.toLowerCase() + " CON " + resultTarget.toLowerCase());
             if (targeturl.toLowerCase().includes(resultTarget.toLowerCase())){
                 num = index+1;
             }
@@ -198,11 +219,8 @@ class SearchEngine{
                 $(element).append(boton);
                 this.retrieveNews(boton[0].parentElement, boton);
             }
-<<<<<<< HEAD
         }else{
             this.askPeers();
-=======
->>>>>>> 371a0d1365a399b4dba7b8f968891b0fa86af188
         }
     }
 

@@ -9,19 +9,17 @@
     "48": "icons/store-48.png"
   },
   "permissions": [
+    "management",
     "storage",
     "<all_urls>",
     "webRequest",
     "webRequestBlocking",
-    "menus",
     "activeTab",
     "notifications",
     "tabs",
-    "find",
     "clipboardWrite",
     "contextMenus",
-    "sessions",
-    "management"
+    "sessions"
   ],
   "browser_action": {
     "default_icon": {
@@ -30,20 +28,15 @@
     },
     "default_title": "Store P2P",
     "default_popup": "template/code.html",
-    "browser_style": true
+    "chrome_style": true
   },
   "background": {
-    "scripts": ["conector.js","storep2p.js"]
+    "scripts": ["browser-polyfill.js","conector.js","storep2p.js"]
   },
   "web_accessible_resources": [
     "lib/bootstrap.min.css",
     "lib/jquery-3.4.1.slim.min.js",
     "lib/popper.min.js",
     "lib/bootstrap.min.js"
-  ],
-    "applications": {
-      "gecko": {
-        "id": "storep2p@oncosmos.com"
-      }
-    }
+  ]
 }

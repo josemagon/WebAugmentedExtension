@@ -18,7 +18,7 @@ class GoogleEngine extends SearchEngine{
         return new Result(target, this, text);
     }
 
-    createButton(aResult){
+    createAugmentedIconsDiv(aResult){
         return $("<div class=\"augmented-icons-results\" data-title=\""+aResult.getText()+"\" data-targeturl=\""+aResult.getTargetURL()+"\" style=\"position:absolute; top:0px;right:0px;\"></div>");
     }
 
@@ -29,5 +29,5 @@ var googleengine = new GoogleEngine();
 browser.runtime.onMessage.addListener((request, sender) => {
 
     console.log("[content-side] calling the message: " + request.message);
-    googleengine[request.message]();
+    googleengine[request.message](request.args);
 });

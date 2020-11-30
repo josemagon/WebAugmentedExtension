@@ -1,5 +1,5 @@
  
-var backgroundPage_1=browser.extension.getBackgroundPage();
+var backgroundPage_1=chrome.extension.getBackgroundPage();
 
 var usuarios = document.getElementById("listusers");
 var listItems = document.getElementById("listitems");
@@ -38,7 +38,7 @@ function sendData(item){
   try {
     
     let usuarioSelected = usuarios.selectedIndex;
-
+    
     let usuario = usuarios.options[usuarioSelected].value;
 
     console.log(JSON.stringify(item));
@@ -47,7 +47,7 @@ function sendData(item){
         type:'syncData',
         data:item,
         automatic:false
-    },usuario);
+        },usuario);
 
   } catch(e) {
     console.log("Error al utilizar sendData.");
@@ -68,6 +68,7 @@ function syncData(){
         
         for (let i in items_saved){
             if (items_saved.hasOwnProperty(i)){
+              console.log('Key is: ' + i + '. Value is: ' + items_saved[i]);
               store.getItem(i,sendData);
             }
         };

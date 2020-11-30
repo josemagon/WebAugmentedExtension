@@ -11,7 +11,7 @@ var boostrap_css;
 var tabActive=null;
 
 //variables que usa el process local
-
+//var dataTemp;
 var remoteuser;
 var remoteResponse=null;
 var ports = [];
@@ -19,10 +19,10 @@ var portFromCS;
 
 
 function loadLibrary(){
-  jquery_link=browser.runtime.getURL("lib/jquery-3.4.1.slim.min.js");
-  popper_link=browser.runtime.getURL("lib/popper.min.js");
-  bootstrap_link=browser.runtime.getURL("lib/bootstrap.min.js");
-  boostrap_css=browser.runtime.getURL("lib/bootstrap.min.css");
+  jquery_link=chrome.runtime.getURL("lib/jquery-3.4.1.slim.min.js");
+  popper_link=chrome.runtime.getURL("lib/popper.min.js");
+  bootstrap_link=chrome.runtime.getURL("lib/bootstrap.min.js");
+  boostrap_css=chrome.runtime.getURL("lib/bootstrap.min.css");
 }
 
 function updateActiveTab(tabs) {
@@ -45,15 +45,15 @@ function updateActiveTab(tabs) {
     }
   }
 
-  var gettingActiveTab = browser.tabs.query({active: true, currentWindow: true});
-  gettingActiveTab.then(updateTab);
+  chrome.tabs.query({active: true, currentWindow: true}, updateTab);
+  
 }
 
 
 class PanelScript {
 
         constructor(url){
-                this.url_resource=browser.extension.getURL(url);
+                this.url_resource=chrome.extension.getURL(url);
                 this.modePanel="";
         }
 
@@ -90,8 +90,11 @@ class PanelScript {
       show(){
                 try {
 
+                //console.log("Acceso open windows panel script");
+                //console.log("URL: "+this.url_resource);
+
                 if (this.modePanel==""){
-                        browser.tabs.create({
+                  chrome.tabs.create({
                                "url": this.url_resource
                               });
                 }else{
@@ -138,9 +141,8 @@ class StorageDB {
   save(data,callback){
     try {
 
-        browser.storage.local.set({[data.key]:data})
-        .then(callback, this.onError);
-     
+      chrome.storage.local.set({[data.key]:data},callback);
+
     } catch(e) {
       console.log("Error al realizar save.");
       console.log(e);
@@ -150,10 +152,8 @@ class StorageDB {
   getItem(key,callback){
     try {
 
-      
-      browser.storage.local.get(key)
-        .then(callback, this.onError);
-      
+      chrome.storage.local.get(key,callback);
+
     } catch(e) {
       console.log("Error al realizar getItem.");
       console.log(e);
@@ -172,7 +172,7 @@ class StoreP2P extends AbstractP2PExtensionBackground{
     this.listado={};
     this.dataTemp=null;
     this.setExtensionName("storep2p");
-    this.setExtensionId(chrome.runtime.id);
+    this.setExtensionId(chrome.runtime.id)
   }
 
   saveItem(item){
@@ -203,17 +203,19 @@ class StoreP2P extends AbstractP2PExtensionBackground{
       console.log(e);
     }
   }
-   
+  
   initialize(){
 
   }
-   
+  
+  
   processRequest(msg, peer){
 
     try {
         remoteuser=peer;
         if (msg){
-          console.log("Arriva contenido Remoto:");
+          console.log("Arriva contenido Remoto de peer :");
+          console.log(peer);
           if (msg.type=="syncData"){
             let sync=msg.data;
             for (let i in sync){
@@ -223,26 +225,27 @@ class StoreP2P extends AbstractP2PExtensionBackground{
                 }
             };
           }
-          browser.notifications.create({
+
+          chrome.notifications.create({
               "type": "basic",
-              "iconUrl": browser.extension.getURL("icons/store-48.png"),
+              "iconUrl": chrome.extension.getURL("icons/store-48.png"),
               "title": "SYNC FULL.",
               "message": "DATOS GUARDADOS LOCALMENTE."
           });
 
-      //Envia respuesta de OK recepcion
-      this.sendResponse({
-        type:'syncData',
-        status:true,
-        automatic:false
-        },peer);
-    
+          //Envia respuesta de OK recepcion
+          this.sendResponse({
+            type:'syncData',
+            status:true,
+            automatic:false
+            },peer);
+        
     
         }else{
 
-          browser.notifications.create({
+          chrome.notifications.create({
               "type": "basic",
-              "iconUrl": browser.extension.getURL("icons/store-48.png"),
+              "iconUrl": chrome.extension.getURL("icons/store-48.png"),
               "title": "SIN DATO.",
               "message": "NO HAY INFORMACION PARA GUARDAR."
           });
@@ -268,11 +271,13 @@ class StoreP2P extends AbstractP2PExtensionBackground{
 
   receiveResponse(msg, peer){
     try {
+    
       if (msg.status){
         console.log("SYNCRO OK DESDE REMOTO.");
       }else{
         console.log("SIN ACTIVIDAD RECEIVE RESPONSE.");
       }
+      
     } catch(e) {
       console.log("Ocurrio una exception con receiveResponse: ");
       console.error(e);
@@ -290,8 +295,7 @@ class StoreP2P extends AbstractP2PExtensionBackground{
       let panel = new PanelScript("template/view_data.html");
       panel.setMode("popup");
       let panelScriptData = panel.createWindow();
-      let panelWindowScript = browser.windows.create(panelScriptData);
-      panelWindowScript.then(function(){console.log("Open OK");}, function(error){console.error("Error al abrir Popup: ",error);});
+      chrome.windows.create(panelScriptData);
 
     } catch(e) {
       console.log("Error al usar showData.");
@@ -322,10 +326,10 @@ class StoreP2P extends AbstractP2PExtensionBackground{
 var dbp2p = new StoreP2P();
 dbp2p.connect();
 // listen to tab URL changes
-browser.tabs.onUpdated.addListener(updateActiveTab);
+chrome.tabs.onUpdated.addListener(updateActiveTab);
 // listen to tab switching
-browser.tabs.onActivated.addListener(updateActiveTab);
+chrome.tabs.onActivated.addListener(updateActiveTab);
 // listen for window switching
-browser.windows.onFocusChanged.addListener(updateActiveTab);
+chrome.windows.onFocusChanged.addListener(updateActiveTab);
 // update when the extension loads initially
 updateActiveTab();

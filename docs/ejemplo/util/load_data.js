@@ -1,6 +1,6 @@
 'use strict';
 
-var backgroundPage_1 = browser.extension.getBackgroundPage();
+var backgroundPage_1 = chrome.extension.getBackgroundPage();
 var p2pExtension = backgroundPage_1.dbp2p;
 var printData=document.getElementById("result");
 
