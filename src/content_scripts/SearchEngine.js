@@ -34,27 +34,32 @@ class SearchEngine{
     }
 
     askPeers(){
+        var augmentedDivs = $(".augmented-icons-results");
+        for (let index = 0; index < augmentedDivs.length; index++) {
+            const element = augmentedDivs[index];
+            var boton = $("<span id=\"p2p-result-"+index+"\" style=\"width: 50px; height: 50px; border: 1px solid black; border-radius: 50px; line-height: 50px; padding:0px; display:inline-block; background-color: white;\"><span class=\"encontrados\">0</span> de <span class=\"peerslength\">0</span></span>");
+            $(element).append(boton);
+            
+            var aDiv = boton[0].parentElement;
+            var texto = $(aDiv).attr("data-title");
+            var target = $(aDiv).attr("data-targeturl");
+
+            this.sendPeersRequest("askPeers", texto,target, index);
+        }
+    }
+
+    sendPeersRequest(message, texto, target, index){
         if (this.peersAvailable){
-            var augmentedDivs = $(".augmented-icons-results");
-            for (let index = 0; index < augmentedDivs.length; index++) {
-                const element = augmentedDivs[index];
-                var boton = $("<span id=\"p2p-result-"+index+"\" style=\"width: 50px; height: 50px; border: 1px solid black; border-radius: 50px; line-height: 50px; padding:0px; display:inline-block; background-color: white;\"><span class=\"encontrados\">0</span> de <span class=\"peerslength\">0</span></span>");
-                $(element).append(boton);
-                
-                var aDiv = boton[0].parentElement;
-                var texto = $(aDiv).attr("data-title");
-                var target = $(aDiv).attr("data-targeturl");
-                browser.runtime.sendMessage({
-                    "message":"askPeers",
-                    "args":{
-                        "resultSelector": this.resultSelector,
-                        "searchURL": this.searchURL,
-                        "text" : texto,
-                        "i": index,
-                        "target": target
-                    }
-                });
-            }
+            browser.runtime.sendMessage({
+                "message":message,
+                "args":{
+                    "resultSelector": this.resultSelector,
+                    "searchURL": this.searchURL,
+                    "text" : texto,
+                    "i": index,
+                    "target": target
+                }
+            });
         }else{
             console.log("cant ask peers yet");
             browser.runtime.sendMessage({
@@ -62,9 +67,10 @@ class SearchEngine{
                 "args":{}
             });
             setTimeout(() => {
-                this.askPeers();
+                this.sendPeersRequest(message, texto, target, index);
             }, 5000);
         }
+        
     }
 
     enablePeers(args){
@@ -74,7 +80,6 @@ class SearchEngine{
 
     addPeerResult(args){
         if (this.isMyEngine()){
-            console.log(args);
             var resultnumber = this.getResultNumber(args.msg.results, args.target);
             var burbuja = $("#p2p-result-" + args.msg.i);
             $(burbuja).find(".peerslength").text(args.mypeerslength);
@@ -106,10 +111,34 @@ class SearchEngine{
         var resultsPosition = $("#mashupdiv > div.mashup-pos-" + aPosition);
         if (resultsPosition.length == 0){
             $("#mashupdiv").append("<div class=\"mashup-pos-"+aPosition+"\"><h2>"+aPosition+"</h2></div>");
-            $("#mashupdiv > div.mashup-pos-" + aPosition).append("<p> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " </p>");
+            var mashupentry = $("<p data-host=\"" + this.hostName + "\"> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " | Posición promedio <span class=\"promedio\">0</span> (<span class=\"foundpeers\">0</span> de <span class=\"mypeerslength\">0</span>)</p>");
+            $("#mashupdiv > div.mashup-pos-" + aPosition).append(mashupentry);
         }else{
-            $(resultsPosition[0]).append("<p> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " </p>");
+            $(resultsPosition[0]).append("<p> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " | Posición promedio <span class=\"promedio\">0</span> (<span class=\"foundpeers\">0</span> de <span class=\"mypeerslength\">0</span>)</p>");
         }
+
+        var posicion_compuesta = {"i" : aPosition, "hostname": this.hostName};
+
+        this.sendPeersRequest("askPeersMashup", aResult.getText(), aResult.getTargetURL(), posicion_compuesta);
+    }
+
+
+    addPeerMashup(args){
+        var linea = $(".mashup-pos-" + args.msg.i).find("p[data-host=\""+args.msg.i.hostname+"\"]");
+        var promedio = $(linea).find(".promedio").text();
+        var foundpeers = $(linea).find(".foundpeers").text();
+        var posicion = this.getResultNumber(args.msg.results, args.msg.target);
+        if (posicion > 0){
+            foundpeers = parseInt(foundpeers);
+            foundpeers++;
+            $(linea).find(".foundpeers").text(foundpeers);
+        }
+
+        $(linea).find(".mypeerslength").text(args.mypeerslength);
+        
+        promedio = parseInt(promedio);
+        promedio = (promedio + posicion) / args.mypeerslength;
+        $(linea).find(".promedio").text(promedio);
     }
 
     addOwnMashup(){
@@ -194,7 +223,6 @@ class SearchEngine{
             const result = aCollection[index];
             // var target = targeturl.split("?")[0].toLowerCase();
             var resultTarget = $($(result).find("a")[0]).attr("href"); //convert it to a html element
-            console.log("COMPARANDO: " + targeturl.toLowerCase() + " CON " + resultTarget.toLowerCase());
             if (targeturl.toLowerCase().includes(resultTarget.toLowerCase())){
                 num = index+1;
             }

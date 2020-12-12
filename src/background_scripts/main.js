@@ -39,8 +39,6 @@ class BackgroundExtension extends AbstractP2PExtensionBackground{
     processRequest(msg, peer){
 
         if( msg.type == "consulta"){
-            console.log("[ProcessRequest] msg: ");
-            console.log(msg);
             // var myresults = this.getResultsFor(msg);
             this.getResultsFor(msg.args).then(data =>{
                 this.sendResponse({
@@ -55,14 +53,20 @@ class BackgroundExtension extends AbstractP2PExtensionBackground{
             
         }
 
-        if (msg.type == 'hello'){
-            console.log("Me estan saludando desde: ");
-            console.log(peer);
-            this.sendResponse({
-                type:'helloreply',
-                status:true,
-                automatic:false
-            },peer);
+        if(msg.type == "consultaMashup"){
+            console.log("[ProcessRequest] msg: [consultaMashup]");
+            console.log(msg);
+            // var myresults = this.getResultsFor(msg);
+            this.getResultsFor(msg.args).then(data =>{
+                this.sendResponse({
+                    type:'resultsMashup',
+                    status:true,
+                    automatic:false,
+                    results : data,
+                    i: msg.args.i,
+                    target: msg.args.target
+                },peer);
+            });
         }
         
     }
@@ -70,24 +74,33 @@ class BackgroundExtension extends AbstractP2PExtensionBackground{
     receiveResponse(msg, peer){
         console.log("receiveResponse");
         if (msg.type == 'results'){
-            console.log("Got some results:");
             
-            console.log(msg);
+            var mypeerslength = this.mypeers.peers.length;
             this.getCurrentTab().then((tabs) => {
                 browser.tabs.sendMessage(tabs[0].id, {
                     "message": "addPeerResult",
                     "args" : {
                         msg : msg,
-                        mypeerslength : 5,
+                        mypeerslength : mypeerslength,
                         target: msg.target
                     }
                 });
             });
         }
 
-        if (msg.type == 'helloreply'){
-            console.log("Got hello back from: ");
-            console.log(peer);
+        if (msg.type == 'resultsMashup'){
+            
+            console.log(msg);
+            var mypeerslength = this.mypeers.peers.length;
+            this.getCurrentTab().then((tabs) => {
+                browser.tabs.sendMessage(tabs[0].id, {
+                    "message": "addPeerMashup",
+                    "args" : {
+                        msg : msg,
+                        mypeerslength : mypeerslength
+                    }
+                });
+            });
         }
         
     }
@@ -105,24 +118,28 @@ class BackgroundExtension extends AbstractP2PExtensionBackground{
         });
     }
 
-    askPeers(args){
+    askPeersMashup(args){
+        this.sendToAll("consultaMashup", args);
+    }
 
+    sendToAll(type, args){
         for (let index = 0; index < this.mypeers.peers.length; index++) {
             const peer = this.mypeers.peers[index];
-            console.log("args: ");
-            console.log(args);
             this.sendRequest({
-                type: "consulta",
+                type: type,
                 status:true,
                 automatic:false,
                 args : args
             }, peer.username);
         }
-        console.log("Mandar a los peers a que busquen " + args.searchURL + args.text);
+    }
+
+    askPeers(args){
+
+        this.sendToAll("consulta", args);
     }
 
     getResultsFor(args){
-        console.log("Attempting to get news from: " + args.searchURL + args.text);
         return new Promise((resolve, reject) => {
             var oReq = new XMLHttpRequest();
 			oReq.onload = function(e) {
@@ -155,20 +172,6 @@ class BackgroundExtension extends AbstractP2PExtensionBackground{
         });
     }
 
-
-    mandarHello(args){
-        this.loadPeers();
-        for (let index = 0; index < this.mypeers.peers.length; index++) {
-            const peer = this.mypeers.peers[index];
-            console.log("saludando a :");
-            console.log(peer);
-            this.sendRequest({
-                type: "hello",
-                status:true,
-                automatic:false
-            }, peer.username);
-        }
-    }
 
 }
 
