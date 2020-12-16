@@ -5,7 +5,10 @@ var objBack=chrome.extension.getBackgroundPage();
 objBack.loadLibrary();
 
 function addCSS(filename){
-    
+    for (let index = 0; index < array.length; index++) {
+        const element = array[index];
+        
+    }
     let head = document.getElementsByTagName('head')[0];
     let style = document.createElement('link');
     style.href = filename;

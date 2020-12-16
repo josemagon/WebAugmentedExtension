@@ -114,7 +114,7 @@ class SearchEngine{
             var mashupentry = $("<p data-host=\"" + this.hostName + "\"> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " | Posición promedio <span class=\"promedio\">0</span> (<span class=\"foundpeers\">0</span> de <span class=\"mypeerslength\">0</span>)</p>");
             $("#mashupdiv > div.mashup-pos-" + aPosition).append(mashupentry);
         }else{
-            $(resultsPosition[0]).append("<p> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " | Posición promedio <span class=\"promedio\">0</span> (<span class=\"foundpeers\">0</span> de <span class=\"mypeerslength\">0</span>)</p>");
+            $(resultsPosition[0]).append("<p data-host=\"" + this.hostName + "\"> <strong>" + this.hostName + "</strong>: " + aResult.getText() + " | Posición promedio <span class=\"promedio\">0</span> (<span class=\"foundpeers\">0</span> de <span class=\"mypeerslength\">0</span>)</p>");
         }
 
         var posicion_compuesta = {"i" : aPosition, "hostname": this.hostName};
@@ -124,21 +124,25 @@ class SearchEngine{
 
 
     addPeerMashup(args){
-        var linea = $(".mashup-pos-" + args.msg.i).find("p[data-host=\""+args.msg.i.hostname+"\"]");
-        var promedio = $(linea).find(".promedio").text();
-        var foundpeers = $(linea).find(".foundpeers").text();
-        var posicion = this.getResultNumber(args.msg.results, args.msg.target);
-        if (posicion > 0){
-            foundpeers = parseInt(foundpeers);
-            foundpeers++;
-            $(linea).find(".foundpeers").text(foundpeers);
-        }
+        if (args != null){
+            console.log("[addPeerMashup] !!!!!");
+            console.log(args);
+            var linea = $(".mashup-pos-" + args.msg.i.i).find("p[data-host=\""+args.msg.i.hostname+"\"]");
+            var promedio = $(linea).find(".promedio").text();
+            var foundpeers = $(linea).find(".foundpeers").text();
+            var posicion = this.getResultNumber(args.msg.results, args.msg.target);
+            if (posicion > 0){
+                foundpeers = parseInt(foundpeers);
+                foundpeers++;
+                $(linea).find(".foundpeers").text(foundpeers);
+            }
 
-        $(linea).find(".mypeerslength").text(args.mypeerslength);
-        
-        promedio = parseInt(promedio);
-        promedio = (promedio + posicion) / args.mypeerslength;
-        $(linea).find(".promedio").text(promedio);
+            $(linea).find(".mypeerslength").text(args.mypeerslength);
+            
+            promedio = parseInt(promedio);
+            promedio = (promedio + posicion) / args.mypeerslength;
+            $(linea).find(".promedio").text(promedio);
+        }
     }
 
     addOwnMashup(){
