@@ -125,7 +125,6 @@ class SearchEngine{
 
     addPeerMashup(args){
         if (args != null){
-            console.log("[addPeerMashup] !!!!!");
             console.log(args);
             var linea = $(".mashup-pos-" + args.msg.i.i).find("p[data-host=\""+args.msg.i.hostname+"\"]");
             var promedio = $(linea).find(".promedio").text();
