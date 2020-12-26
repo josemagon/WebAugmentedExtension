@@ -35,7 +35,7 @@ class DuckDuckGoEngine extends SearchEngine{
                 var new_result = this.createResultFrom(element);
 
                 if(new_result.getTargetURL() !== "") //double check if it s a result
-                    $(element).after(this.createButton(new_result));
+                    $(element).after(this.createAugmentedIconsDiv(new_result));
             }
             this.iconsDivReady();
         }, 3000);   
